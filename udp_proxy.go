@@ -48,7 +48,7 @@ func (client *UDPClient) Init(clientAddr *net.UDPAddr, serverAddr *net.UDPAddr) 
 	for {
 		proxyPort, err := client.bindRandomProxyPort(minProxyPort, maxProxyPort)
 		if err == nil {
-			log.Infof("bind port %d.", proxyPort)
+			log.Infof("%v : bind port %d.", time.Now().Format("2006-01-02 15:04:05"), proxyPort)
 			break
 		}
 	}
@@ -207,7 +207,7 @@ func (manager *UDPClientManager) TryAddClient(clientAddr *net.UDPAddr) bool {
 		client := new(UDPClient)
 		client.Init(clientAddr, &manager.ServerAddr)
 		manager.ClientDict[clientAddr.String()] = client
-		log.Infof("Add Client %s", clientAddr.String())
+		log.Infof("%v : Add Client %s", time.Now().Format("2006-01-02 15:04:05"), clientAddr.String())
 
 		manager.DoneQueue[clientAddr.String()] = make(chan bool)
 		wg.Add(1)
@@ -252,10 +252,10 @@ func main() {
 	log.SetOutput(os.Stdout)
 	// log.SetLevel(log.DebugLevel)
 	log.SetLevel(log.InfoLevel)
-	log.SetReportCaller(true)
+	//log.SetReportCaller(true)
 
 	if len(os.Args) < 4 {
-		log.Infof("Usage: python3 udp_proxy.py <local port> <remote ip> <remote port>")
+		log.Infof("Usage: ./go-udp-proxy <local port> <remote ip> <remote port>")
 	}
 	localPortStr, remoteIP, remotePortStr := os.Args[1], os.Args[2], os.Args[3]
 	localPort, _ := strconv.Atoi(localPortStr)
